@@ -64,10 +64,10 @@ func ReflectToString(rValue reflect.Value) (value string, err error) {
 			bytes := rValue.Bytes()
 			return string(bytes), nil
 		default:
-			return "", errors.New("goclub/conv: field(" + rType.Name() + ")" + "can not conv to string" + rType.String())
+			return "", errors.New("goclub/conv: field(name:" + rType.Name() + "kind:" +  rType.Kind().String() + ")" + "can not conv to string " + rType.String())
 		}
 	default:
-		return "", errors.New("goclub/conv: field(" + rType.Name() + ")" + "can not conv to string" + rType.Kind().String())
+		return "", errors.New("goclub/conv: field(name:" + rType.Name() + "kind:" +  rType.Kind().String() + ")" + "can not conv to string " + rType.String())
 	}
 	return
 }
@@ -134,10 +134,10 @@ func coreStringToReflect (s string, rValue reflect.Value, rType reflect.Type) er
 			bytes := []byte(s)
 			rValue.SetBytes(bytes)
 		default:
-			return errors.New("goclub/conv: field(" + rType.Name() + ")" + "can not string conv type " + rType.String())
+			return errors.New("goclub/conv: field(name:" + rType.Name() + "kind:" +  rType.Kind().String() + ")" + "can not string conv type " + rType.String())
 		}
 	default:
-		return errors.New("goclub/conv: field(" + rType.Name() + ")" + "can not string conv type " + rType.Kind().String())
+		return errors.New("goclub/conv: field(name:" + rType.Name() + "kind:" +  rType.Kind().String() + ")" + "can not string conv type " + rType.String())
 	}
 	return nil
 }
