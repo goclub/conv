@@ -37,7 +37,41 @@ func StringBool(s string) (bool, error) {
 	}
 	return false, errors.New("og/x/conv: " + s + " can't conv to bool")
 }
-func StringReflect(s string, rValue reflect.Value)  error {
+func ReflectToString(rValue reflect.Value) (value string, err error) {
+	rType := rValue.Type()
+	switch rType.Kind() {
+	case reflect.String:
+		return rValue.String(), nil
+	case reflect.Int,reflect.Int8,reflect.Int16,reflect.Int32,reflect.Int64:
+		return strconv.FormatInt(rValue.Int(), 10), nil
+	case reflect.Uint,reflect.Uint8,reflect.Uint16,reflect.Uint32,reflect.Uint64:
+		return strconv.FormatUint(rValue.Uint(), 10), nil
+	case reflect.Bool:
+		// 采用1 0 尽可能的让数据量小
+		if rValue.Bool() {
+			return "1", nil
+		} else {
+			return "0", nil
+		}
+	case reflect.Float32:
+		return strconv.FormatFloat(rValue.Float(),'g', -1, 32), nil
+	case reflect.Float64:
+		return strconv.FormatFloat(rValue.Float(),'g', -1, 64), nil
+	case reflect.Array, reflect.Slice:
+		elemType := rType.Elem()
+		switch elemType.Kind() {
+		case reflect.Uint8: // []byte
+			bytes := rValue.Bytes()
+			return string(bytes), nil
+		default:
+			return "", errors.New("goclub/conv: field(" + rType.Name() + ")" + "can not conv to string" + rType.String())
+		}
+	default:
+		return "", errors.New("goclub/conv: field(" + rType.Name() + ")" + "can not conv to string" + rType.Kind().String())
+	}
+	return
+}
+func StringToReflect(s string, rValue reflect.Value)  error {
 	rType := rValue.Type()
 	if !rValue.CanSet() {
 		if rValue.Kind() == reflect.Ptr {
@@ -45,12 +79,12 @@ func StringReflect(s string, rValue reflect.Value)  error {
 			rType = rType.Elem()
 		}
 		if !rValue.CanSet() {
-			return errors.New("StringReflect(s, rValue) rValue must can set, mu be you should use reflect.ValueOf(pointer)")
+			return errors.New("goclub/conv: StringReflect(s, rValue) rValue must can set, mu be you should use reflect.ValueOf(pointer)")
 		}
 	}
-	return coreStringReflect(s, rValue, rType)
+	return coreStringToReflect(s, rValue, rType)
 }
-func coreStringReflect (s string, rValue reflect.Value, rType reflect.Type) error {
+func coreStringToReflect (s string, rValue reflect.Value, rType reflect.Type) error {
 	switch rType.Kind() {
 	case reflect.String:
 		rValue.SetString(s)
@@ -100,10 +134,10 @@ func coreStringReflect (s string, rValue reflect.Value, rType reflect.Type) erro
 			bytes := []byte(s)
 			rValue.SetBytes(bytes)
 		default:
-			return errors.New("field (" + rType.Name() + ")" + "can not string conv type " + rType.String())
+			return errors.New("goclub/conv: field(" + rType.Name() + ")" + "can not string conv type " + rType.String())
 		}
 	default:
-		return errors.New("field (" + rType.Name() + ")" + "can not string conv type " + rType.Kind().String())
+		return errors.New("goclub/conv: field(" + rType.Name() + ")" + "can not string conv type " + rType.Kind().String())
 	}
 	return nil
 }

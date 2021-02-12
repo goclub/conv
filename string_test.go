@@ -63,7 +63,7 @@ func TestStringBool(t *testing.T) {
 		}
 	}
 }
-func TestStringReflect(t *testing.T) {
+func TestStringToReflect(t *testing.T) {
 	type Data struct {
 		s string
 		i int
@@ -83,49 +83,49 @@ func TestStringReflect(t *testing.T) {
 	}
 	data := Data{}
 	assert.NoError(t,
-		StringReflect("s", reflect.ValueOf(&data.s)),
+		StringToReflect("s", reflect.ValueOf(&data.s)),
 	)
 	assert.NoError(t,
-		StringReflect("-1", reflect.ValueOf(&data.i)),
+		StringToReflect("-1", reflect.ValueOf(&data.i)),
 	)
 	assert.NoError(t,
-		StringReflect("-2", reflect.ValueOf(&data.i8)),
+		StringToReflect("-2", reflect.ValueOf(&data.i8)),
 	)
 	assert.NoError(t,
-		StringReflect("-3", reflect.ValueOf(&data.i16)),
+		StringToReflect("-3", reflect.ValueOf(&data.i16)),
 	)
 	assert.NoError(t,
-		StringReflect("-4", reflect.ValueOf(&data.i32)),
+		StringToReflect("-4", reflect.ValueOf(&data.i32)),
 	)
 	assert.NoError(t,
-		StringReflect("-5", reflect.ValueOf(&data.i64)),
+		StringToReflect("-5", reflect.ValueOf(&data.i64)),
 	)
 	assert.NoError(t,
-		StringReflect("1", reflect.ValueOf(&data.ui)),
+		StringToReflect("1", reflect.ValueOf(&data.ui)),
 	)
 	assert.NoError(t,
-		StringReflect("2", reflect.ValueOf(&data.ui8)),
+		StringToReflect("2", reflect.ValueOf(&data.ui8)),
 	)
 	assert.NoError(t,
-		StringReflect("3", reflect.ValueOf(&data.ui16)),
+		StringToReflect("3", reflect.ValueOf(&data.ui16)),
 	)
 	assert.NoError(t,
-		StringReflect("4", reflect.ValueOf(&data.ui32)),
+		StringToReflect("4", reflect.ValueOf(&data.ui32)),
 	)
 	assert.NoError(t,
-		StringReflect("5", reflect.ValueOf(&data.ui64)),
+		StringToReflect("5", reflect.ValueOf(&data.ui64)),
 	)
 	assert.NoError(t,
-		StringReflect("true", reflect.ValueOf(&data.bool)),
+		StringToReflect("true", reflect.ValueOf(&data.bool)),
 	)
 	assert.NoError(t,
-		StringReflect("0.1", reflect.ValueOf(&data.f32)),
+		StringToReflect("0.1", reflect.ValueOf(&data.f32)),
 	)
 	assert.NoError(t,
-		StringReflect("0.2", reflect.ValueOf(&data.f64)),
+		StringToReflect("0.2", reflect.ValueOf(&data.f64)),
 	)
 	assert.NoError(t,
-		StringReflect("b我", reflect.ValueOf(&data.bytes)),
+		StringToReflect("b我", reflect.ValueOf(&data.bytes)),
 	)
 	assert.Equal(t,data, Data{"s", -1, -2, -3, -4, -5, 1, 2, 3, 4, 5, true, 0.1, 0.2, []byte("b我")})
 	{
@@ -133,20 +133,20 @@ func TestStringReflect(t *testing.T) {
 			data := struct {
 				Name string
 			}{}
-			assert.Errorf(t, StringReflect("nimoc", reflect.ValueOf(data).Field(0)), "StringReflect(s, rValue) rValue must can set, mu be you should use reflect.ValueOf(pointer)")
+			assert.Errorf(t, StringToReflect("nimoc", reflect.ValueOf(data).Field(0)), "goclub/conv: StringToReflect(s, rValue) rValue must can set, mu be you should use reflect.ValueOf(pointer)")
 		}
 		{
 			data := struct {
 				Name string
 			}{}
-			assert.Errorf(t, StringReflect("nimoc", reflect.ValueOf(data.Name)), "StringReflect(s, rValue) rValue must can set, mu be you should use reflect.ValueOf(pointer)")
+			assert.Errorf(t, StringToReflect("nimoc", reflect.ValueOf(data.Name)), "goclub/conv: StringToReflect(s, rValue) rValue must can set, mu be you should use reflect.ValueOf(pointer)")
 		}
 		{
 			data := struct {
 				Name string
 			}{}
 			assert.NoError(t,
-				StringReflect("nimoc", reflect.ValueOf(&data).Elem().Field(0)),
+				StringToReflect("nimoc", reflect.ValueOf(&data).Elem().Field(0)),
 			)
 			assert.Equal(t,data.Name, "nimoc")
 		}
@@ -155,9 +155,37 @@ func TestStringReflect(t *testing.T) {
 				Name string
 			}{}
 			assert.NoError(t,
-				StringReflect("nimoc", reflect.ValueOf(&data.Name)),
+				StringToReflect("nimoc", reflect.ValueOf(&data.Name)),
 			)
 			assert.Equal(t,data.Name, "nimoc")
 		}
+	}
+}
+
+func TestReflectToString(t *testing.T) {
+	type Data struct {
+		s string
+		i int
+		i8 int8
+		i16 int16
+		i32 int32
+		i64 int64
+		ui uint
+		ui8 uint8
+		ui16 uint16
+		ui32 uint32
+		ui64 uint64
+		bool bool
+		f32 float32
+		f64 float64
+		bytes []byte
+	}
+	data := Data{"s", -1, -2, -3, -4, -5, 1, 2, 3, 4, 5, true, 0.1, 0.2, []byte("b我")}
+	testdata := []string{"s", "-1", "-2", "-3", "-4","-5", "1", "2", "3", "4", "5", "1", "0.1", "0.2", "b我"}
+	for i, v := range testdata {
+		item := reflect.ValueOf(data).Field(i)
+		value, err := ReflectToString(item)
+		assert.NoError(t, err)
+		assert.Equal(t, value, v)
 	}
 }
