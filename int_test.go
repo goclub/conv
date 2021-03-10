@@ -2,6 +2,7 @@ package xconv
 
 import (
 	"github.com/stretchr/testify/assert"
+	"math"
 	"testing"
 )
 
@@ -15,4 +16,111 @@ func TestIntString(t *testing.T) {
 	assert.Equal(t, "123456", Int32String(int32(123456)))
 	assert.Equal(t, "123456", Int64String(int64(123456)))
 	assert.Equal(t, "11110001001000000", Int64StringWithBase(int64(123456), 2))
+}
+func TestInt8Int16(t *testing.T) {
+	assert.Equal(t, Int8Int16(int8(math.MinInt8)), int16(-128))
+}
+
+func TestInt16Int8(t *testing.T) {
+	{
+		v, err := Int16Int8(int16(math.MinInt8-1))
+		assert.EqualError(t, err, "goclub/conv: int16 to int8 fail, int must greater than or equal to math.MinInt8")
+		assert.Equal(t, v, int8(0))
+	}
+	{
+		v, err := Int16Int8(int16(math.MinInt8))
+		assert.NoError(t, err)
+		assert.Equal(t, v, int8(-128))
+	}
+	{
+		v, err := Int16Int8(int16(math.MinInt8+1))
+		assert.NoError(t, err)
+		assert.Equal(t, v, int8(-127))
+	}
+	{
+		v, err := Int16Int8(int16(math.MaxInt8))
+		assert.NoError(t, err)
+		assert.Equal(t, v, int8(127))
+	}
+	{
+		v, err := Int16Int8(int16(math.MaxInt8-1))
+		assert.NoError(t, err)
+		assert.Equal(t, v, int8(126))
+	}
+	{
+		v, err := Int16Int8(int16(math.MaxInt8+1))
+		assert.EqualError(t, err, "goclub/conv: int16 to int8 fail, int must less than or equal to math.MaxInt8")
+		assert.Equal(t, v, int8(0))
+	}
+}
+
+func TestInt8Int32(t *testing.T) {
+	assert.Equal(t, Int8Int32(int8(math.MinInt8)), int32(-128))
+}
+func TestInt32Int8(t *testing.T) {
+	{
+		v, err := Int32Int8(int32(math.MinInt8-1))
+		assert.EqualError(t, err, "goclub/conv: int32 to int8 fail, int must greater than or equal to math.MinInt8")
+		assert.Equal(t, v, int8(0))
+	}
+	{
+		v, err := Int32Int8(int32(math.MinInt8))
+		assert.NoError(t, err)
+		assert.Equal(t, v, int8(-128))
+	}
+	{
+		v, err := Int32Int8(int32(math.MinInt8+1))
+		assert.NoError(t, err)
+		assert.Equal(t, v, int8(-127))
+	}
+	{
+		v, err := Int32Int8(int32(math.MaxInt8))
+		assert.NoError(t, err)
+		assert.Equal(t, v, int8(127))
+	}
+	{
+		v, err := Int32Int8(int32(math.MaxInt8-1))
+		assert.NoError(t, err)
+		assert.Equal(t, v, int8(126))
+	}
+	{
+		v, err := Int32Int8(int32(math.MaxInt8+1))
+		assert.EqualError(t, err, "goclub/conv: int32 to int8 fail, int must less than or equal to math.MaxInt8")
+		assert.Equal(t, v, int8(0))
+	}
+}
+func TestInt8Int64(t *testing.T) {
+	assert.Equal(t, Int8Int64(int8(math.MinInt8)), int64(-128))
+}
+func TestInt64Int8(t *testing.T) {
+	{
+		v, err := Int64Int8(int64(math.MinInt8-1))
+		assert.EqualError(t, err, "goclub/conv: int64 to int8 fail, int must greater than or equal to math.MinInt8")
+		assert.Equal(t, v, int8(0))
+	}
+	{
+		v, err := Int64Int8(int64(math.MinInt8))
+		assert.NoError(t, err)
+		assert.Equal(t, v, int8(-128))
+	}
+	{
+		v, err := Int64Int8(int64(math.MinInt8+1))
+		assert.NoError(t, err)
+		assert.Equal(t, v, int8(-127))
+	}
+	{
+		v, err := Int64Int8(int64(math.MaxInt8))
+		assert.NoError(t, err)
+		assert.Equal(t, v, int8(127))
+	}
+	{
+		v, err := Int64Int8(int64(math.MaxInt8-1))
+		assert.NoError(t, err)
+		assert.Equal(t, v, int8(126))
+	}
+	{
+		v, err := Int64Int8(int64(math.MaxInt8+1))
+		assert.EqualError(t, err, "goclub/conv: int64 to int8 fail, int must less than or equal to math.MaxInt8")
+		assert.Equal(t, v, int8(0))
+	}
 }
