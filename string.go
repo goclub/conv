@@ -35,7 +35,7 @@ func StringBool(s string) (bool, error) {
 		"0":
 		return false, nil
 	}
-	return false, errors.New("og/x/conv: " + s + " can't conv to bool")
+	return false, errors.New("goclub/conv: " + s + " can't conv to bool")
 }
 func ReflectToString(rValue reflect.Value) (value string, err error) {
 	rType := rValue.Type()

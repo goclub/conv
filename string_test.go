@@ -59,7 +59,7 @@ func TestStringBool(t *testing.T) {
 		for i:=0 ; i< len(sList) ; i++ {
 			b, err := StringBool(sList[0])
 			assert.Equal(t, b, false)
-			assert.EqualError(t, err, "og/x/conv: " + sList[0]  + " can't conv to bool")
+			assert.EqualError(t, err, "goclub/conv: " + sList[0]  + " can't conv to bool")
 		}
 	}
 }
