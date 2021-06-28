@@ -124,3 +124,53 @@ func TestInt64Int8(t *testing.T) {
 		assert.Equal(t, v, int8(0))
 	}
 }
+func TestInt32Int64(t *testing.T) {
+	assert.Equal(t, Int32Int64(math.MinInt32), int64(math.MinInt32))
+	assert.Equal(t, Int32Int64(math.MaxInt32), int64(math.MaxInt32))
+}
+
+func TestInt64Int32(t *testing.T) {
+	{
+		i32, err := Int64Int32(math.MinInt64)
+		assert.EqualError(t, err, "goclub/conv: int64 to int32 fail, int must greater than or equal to math.MinInt32")
+		assert.Equal(t, i32, int32(0))
+	}
+	{
+		i32, err := Int64Int32(math.MinInt32)
+		assert.NoError(t, err)
+		assert.Equal(t, i32, int32(-2147483648))
+	}
+	{
+		i32, err := Int64Int32(math.MinInt32-1)
+		assert.EqualError(t, err, "goclub/conv: int64 to int32 fail, int must greater than or equal to math.MinInt32")
+		assert.Equal(t, i32, int32(0))
+	}
+	{
+		i32, err := Int64Int32(math.MaxInt32)
+		assert.NoError(t, err)
+		assert.Equal(t, i32, int32(2147483647))
+	}
+	{
+		i32, err := Int64Int32(math.MaxInt32+1)
+		assert.EqualError(t, err, "goclub/conv: int64 to int32 fail, int must less than or equal to math.MaxInt32")
+		assert.Equal(t, i32, int32(0))
+	}
+}
+
+func TestUint32Uint64(t *testing.T) {
+	assert.Equal(t, Uint32Uint64(0), uint64(0))
+	assert.Equal(t, Uint32Uint64(math.MaxUint32), uint64(math.MaxUint32))
+}
+
+func TestUint64Uint32(t *testing.T) {
+	{
+		i32, err := Uint64Uint32(math.MaxUint32)
+		assert.NoError(t, err)
+		assert.Equal(t, i32, uint32(4294967295))
+	}
+	{
+		i32, err := Uint64Uint32(math.MaxUint32+1)
+		assert.EqualError(t, err, "goclub/conv: uint64 to uint32 fail, int must less than or equal to math.MaxUint32")
+		assert.Equal(t, i32, uint32(0))
+	}
+}

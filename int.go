@@ -43,6 +43,28 @@ func Int64Int8(i int64) (int8, error) {
 	return int8(i),nil
 }
 
+func Int32Int64(i int32) int64 {
+	return int64(i)
+}
+func Int64Int32(i int64) (int32, error) {
+	if i < math.MinInt32 {
+		return 0, errors.New("goclub/conv: int64 to int32 fail, int must greater than or equal to math.MinInt32")
+	}
+	if i > math.MaxInt32  {
+		return 0, errors.New("goclub/conv: int64 to int32 fail, int must less than or equal to math.MaxInt32")
+	}
+	return int32(i),nil
+}
+func Uint32Uint64(i uint32) uint64 {
+	return uint64(i)
+}
+func Uint64Uint32(i uint64) (uint32, error) {
+	if i > math.MaxUint32  {
+		return 0, errors.New("goclub/conv: uint64 to uint32 fail, int must less than or equal to math.MaxUint32")
+	}
+	return uint32(i),nil
+}
+
 func IntBool (i int) bool{
 	if i == 0 { return false }
 	return true
