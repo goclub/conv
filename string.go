@@ -141,3 +141,11 @@ func coreStringToReflect (s string, rValue reflect.Value, rType reflect.Type) er
 	}
 	return nil
 }
+
+func StringPointerString(stringPointer *string) string {
+	if stringPointer == nil {
+		return ""
+	} else {
+		return *stringPointer
+	}
+}

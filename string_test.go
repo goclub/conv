@@ -189,3 +189,13 @@ func TestReflectToString(t *testing.T) {
 		assert.Equal(t, value, v)
 	}
 }
+func TestStringPointerToString(t *testing.T) {
+	{
+		var a *string
+		assert.Equal(t,StringPointerString(a), "")
+	}
+	var a *string
+	var b = "abc"
+	a= &b
+	assert.Equal(t,StringPointerString(a), "abc")
+}
