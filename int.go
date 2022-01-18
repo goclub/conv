@@ -85,3 +85,11 @@ func Int64String(i int64) string {
 func Int64StringWithBase(i int64, base int) string {
 	return strconv.FormatInt(i, base)
 }
+
+func Int64PointerInt64(int642Pointer *int64) int64 {
+	if int642Pointer == nil {
+		return 0
+	} else {
+		return *int642Pointer
+	}
+}

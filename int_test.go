@@ -174,3 +174,14 @@ func TestUint64Uint32(t *testing.T) {
 		assert.Equal(t, i32, uint32(0))
 	}
 }
+
+func TestInt64PointerInt64(t *testing.T) {
+	{
+		var a *int64
+		assert.Equal(t,Int64PointerInt64(a), int64(0))
+	}
+	var a *int64
+	var b int64 = 1
+	a= &b
+	assert.Equal(t,Int64PointerInt64(a), int64(1))
+}
